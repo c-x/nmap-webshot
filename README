@@ -1,0 +1,64 @@
+========
+= GOAL =
+========
+
+The webshot NSE script allow you to automatically take screenshot when discovering web services.
+It also automatically do some little dirbusting basics.
+
+This is the first release, please give me some feedback to improve it.
+
+=========
+= Setup =
+=========
+
+1. Install fontconfig if it's not already installed (distro dependant)
+2. Copy the NSE script (webshot.nse) to your nmap script directory ( /usr/share/nmap/scripts/ )
+3. Install PhantomJS with the provided screenshot.js (see below)
+4. Edit globals in the .nse to fit your needs (required only if you change PATH and/or directory to tests)
+5. Update the nmap nse database (nmap --script-updatedb)
+6. Smile for the picture :-P
+
+==========================
+= Requierments / Credits =
+==========================
+
+PhantomJS   
+	http://code.google.com/p/phantomjs
+
+Original screenshot.js 
+	http://phantomjs.org/
+	http://jsbin.com/udopaj/3/js
+
+FontConfig
+	http://www.freedesktop.org/wiki/Software/fontconfig
+
+=====================
+= Detailled Install =
+=====================
+All steps are done as root.
+
+PhantomJS
+	# cd /opt
+	# wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.bz2
+	# tar xjpf phantomjs-1.6.0-linux-i686-dynamic.tar.bz2 
+	# mv phantomjs-1.6.0-linux-i686-dynamic 
+
+screenshot.js
+	# mkdir -p /opt/nmap-webshot/png
+	# Then download the screenshot.js from my github and put it in /opt/nmap-webshot
+
+=========
+= USAGE =
+=========
+# nmap --script webshot -T5 -PN -p 80,443 192.168.0.0/24
+# nmap --script webshot --script-args dirguess=no -p 80,443 192.168.1.123
+# nmap --script webshot --script-args skiperr=yes -p 80,443 192.168.1.123
+# nmap --script webshot --script-args dirguess=no,skiperr=yes -p 80,443 192.168.1.123
+
+=======
+= WHO =
+=======
+
+Developped by @_CLX for fun and nothing !
+
+
