@@ -28,6 +28,7 @@ PhantomJS
 Original screenshot.js 
 	http://phantomjs.org/
 	http://jsbin.com/udopaj/3/js
+	The provided screenshot.js was modified by @DrM_fr to deactivate caching 
 
 FontConfig
 	http://www.freedesktop.org/wiki/Software/fontconfig
