@@ -5,6 +5,8 @@
 The webshot NSE script allow you to automatically take screenshot when discovering web services.
 It also automatically do some little dirbusting basics.
 
+_NO_ X Server is required : Yes, it works in command line, thanks PhantomJS.
+
 This is the first release, please give me some feedback to improve it.
 
 =========
