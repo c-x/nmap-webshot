@@ -32,8 +32,6 @@
 PhantomJS    = "/opt/phantomjs-1.6.0-linux-i686-dynamic/bin/phantomjs --ignore-ssl-errors=yes"
 ScreenshotJS = "/opt/nmap-webshot/screenshot.js"
 PNGDir       = "/opt/nmap-webshot/png"
-
--- do NOT add the leading '/', it will be automatically added.
 PageS        = { '/adm', '/admin', '/administrator', '/robots.txt' , '/wp-upload' }
 
 ------------------------------------------------------------------------
