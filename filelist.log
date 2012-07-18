@@ -1,0 +1,5 @@
+/admin
+/.htpasswd
+/robots.txt
+/secret
+/ultra/secured/directory

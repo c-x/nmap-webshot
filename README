@@ -28,7 +28,6 @@ PhantomJS
 Original screenshot.js 
 	http://phantomjs.org/
 	http://jsbin.com/udopaj/3/js
-	The provided screenshot.js was modified by @DrM_fr to deactivate caching 
 
 FontConfig
 	http://www.freedesktop.org/wiki/Software/fontconfig
@@ -48,6 +47,9 @@ screenshot.js
 	# mkdir -p /opt/nmap-webshot/png
 	# Then download the screenshot.js from my github and put it in /opt/nmap-webshot
 
+filelist.log
+	# cp filelist.log /opt/nmap-webshot/filelist.log
+
 =========
 = USAGE =
 =========
@@ -55,6 +57,9 @@ screenshot.js
 # nmap --script webshot --script-args dirguess=no -p 80,443 192.168.1.123
 # nmap --script webshot --script-args skiperr=yes -p 80,443 192.168.1.123
 # nmap --script webshot --script-args dirguess=no,skiperr=yes -p 80,443 192.168.1.123
+# nmap --script webshot --script-args list=/opt/nmap-webshot/filelist.log -p 80,443 192.168.1.123
+
+See webshot.nse sources for options documentation.
 
 =======
 = WHO =

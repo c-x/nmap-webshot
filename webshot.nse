@@ -1,17 +1,21 @@
 ---
 -- @usage
--- nmap --script webshot [--script-args dirguess=no,skiperr=yes]  -p 80,443 <host>
+-- nmap --script webshot [--script-args dirguess=no,skiperr=yes,list=filelist.log] -p 80,443 <host>
 -- option skiperr 
 --     if set to no, webshot 404 and others related errors.
 --     if not set, or set to yes, only webshot 2xx and 3xx HTTP return codes
 -- option dirguess
 --     if set to no, do not try to guess directory, just webshot the '/'
 --     if not set, or set to yes, try to guess directories using 'PageS' variables (see config below)
+-- option list
+--     if specified, try to open the submitted file for directories/files to test.
+--     One dir/file per line (see sample filelist.log)
 --
 -- @output:
 -- PORT    STATE  SERVICE
 -- 80/tcp  open   http
 -- | webshot: 
+-- |   /opt/nmap-webshot/png/nmap-webshot-192.168.1.123_index.html
 -- |   /opt/nmap-webshot/png/nmap-webshot-192.168.1.123.80_200.png
 -- |   /opt/nmap-webshot/png/nmap-webshot-192.168.1.123.80_adm_200.png
 -- |   /opt/nmap-webshot/png/nmap-webshot-192.168.1.123.80_admin_200.png
@@ -29,9 +33,8 @@ PhantomJS    = "/opt/phantomjs-1.6.0-linux-i686-dynamic/bin/phantomjs --ignore-s
 ScreenshotJS = "/opt/nmap-webshot/screenshot.js"
 PNGDir       = "/opt/nmap-webshot/png"
 
-
 -- do NOT add the leading '/', it will be automatically added.
-PageS        = { 'adm', 'admin', 'administrator', 'very/secret' , 'wp-upload' }
+PageS        = { '/adm', '/admin', '/administrator', '/robots.txt' , '/wp-upload' }
 
 ------------------------------------------------------------------------
 -- DO NOT EDIT ANYTHING BELOW THIS LINE OR THE EARTH WILL COLLAPSE oO --
@@ -47,18 +50,32 @@ categories = {"discovery", "safe"}
 
 require 'shortport'
 require 'http'
+require 'io'
 
 portrule = shortport.port_or_service( {80, 443}, {"http", "https"}, "tcp", "open")
 
 
 action = function(host, port)
 
+	-- use external list ?
+	if nmap.registry.args.list ~= nil then
+		
+		local f = assert(io.open(nmap.registry.args.list, 'r'), "Failed to open submitted input list")
+
+		PageS = {}
+		for l in f:lines() do
+			table.insert(PageS, l)
+		end
+		f:close()
+	end
+
 	local prefix = "http://"
 	if port.number == 443 then
 		prefix = "https://"
 	end
 
-
+	local html     = ""
+	local htmlFile = "nmap-webshot-" .. host.ip .. "_index.html"
 	local msg   = ""
 
 	-- Just get the / page ?
@@ -74,9 +91,9 @@ action = function(host, port)
 		if i == 0 then
 			page  = '/'
 		else
-			page  = '/' .. PageS[i]
+			page  = PageS[i]
 		end
-		
+
 		local r = http.get(host.ip, port.number, page)
 
 		-- check the http code before asking a screeshot
@@ -91,20 +108,32 @@ action = function(host, port)
 	
 			-- replace '/' in filename by dots.
 			f_dst = string.gsub(f_dst, "_/", "_")	
-			f_dst = string.gsub(f_dst, "/", ".")	
-			f_dst = PNGDir .. '/' .. f_dst
+			f_dst = string.gsub(f_dst, "/", ".")
 
 			-- execute command, take the screenshot using PhamtomJS
-			local cmd = PhantomJS .. " " .. ScreenshotJS .. " " .. url .. " " .. f_dst  .. " 2>/dev/null 1>/dev/null"
+			local cmd = PhantomJS .. " " .. ScreenshotJS .. " " .. url .. " " .. PNGDir .. '/' .. f_dst  .. " 2>/dev/null 1>/dev/null"
 			local ret = os.execute(cmd)
 
 			if ret == 0 then
 				msg =  msg .. f_dst .. "\n"
+				html = html .. url .. "<br><div align='center'><img src='./" .. f_dst .."' /></div><br>\n"
 			else
 				msg = msg .. "Error while tacking the picture. Smile please...\n"
 			end
 		end
 	end
+	
+	if html ~= "" then
+		msg =  htmlFile .. "\n" .. msg
+		htmlFile = PNGDir .. "/" .. htmlFile
+
+		local f = assert(io.open(htmlFile, 'w'), "Failed to open output html file for writing")
+		f:write("<html><body>\n")
+		f:write(html)
+		f:write("</body></html>\n")
+		f:close()
+	end
+
 	return stdnse.format_output(true, msg)
 end
 

@@ -1,5 +1,7 @@
 //VERSION 0.2
-var width = 1280, height = 1024, timeout = 7000;
+//var width = 1280, height = 1024;
+var width = 800, height = 600;
+var timeout = 5000;
 var page = new WebPage(), address, output;
 
 if (phantom.args.length != 2) {
