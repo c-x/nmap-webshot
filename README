@@ -30,6 +30,7 @@ PhantomJS
 Original screenshot.js 
 	http://phantomjs.org/
 	http://jsbin.com/udopaj/3/js
+	This nse script use a modified version, see below.
 
 FontConfig
 	http://www.freedesktop.org/wiki/Software/fontconfig
@@ -43,7 +44,6 @@ PhantomJS
 	# cd /opt
 	# wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.bz2
 	# tar xjpf phantomjs-1.6.0-linux-i686-dynamic.tar.bz2 
-	# mv phantomjs-1.6.0-linux-i686-dynamic 
 
 screenshot.js
 	# mkdir -p /opt/nmap-webshot/png
