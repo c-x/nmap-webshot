@@ -46,9 +46,10 @@ author     = "@_CLX"
 license    = "GPLv2"
 categories = {"discovery", "safe"}
 
-require 'shortport'
-require 'http'
-require 'io'
+local shortport = require 'shortport'
+local http = require 'http'
+local io = require 'io'
+local stdnse = require 'stdnse'
 
 portrule = shortport.port_or_service( {80, 443}, {"http", "https"}, "tcp", "open")
 
@@ -112,7 +113,7 @@ action = function(host, port)
 			local cmd = PhantomJS .. " " .. ScreenshotJS .. " " .. url .. " " .. PNGDir .. '/' .. f_dst  .. " 2>/dev/null 1>/dev/null"
 			local ret = os.execute(cmd)
 
-			if ret == 0 then
+			if ret == true then
 				msg =  msg .. f_dst .. "\n"
 				html = html .. url .. "<br><div align='center'><img src='./" .. f_dst .."' /></div><br>\n"
 			else
